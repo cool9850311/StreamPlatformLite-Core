@@ -66,6 +66,11 @@ func LoadConfig() {
 	AppConfig.Server.Domain = os.Getenv("DOMAIN")
 	AppConfig.Frontend.Domain = os.Getenv("FRONTEND_DOMAIN")
 	AppConfig.Frontend.Port = int(getEnvAsInt64("FRONTEND_PORT", 3000))
+	loginPath := os.Getenv("FRONTEND_LOGIN_PATH")
+	if loginPath == "" {
+		loginPath = "/stream"
+	}
+	AppConfig.Frontend.LoginPath = loginPath
 	AppConfig.Redis.URI = os.Getenv("REDIS_URI")
 	AppConfig.Server.EnableGinLog, err = strconv.ParseBool(os.Getenv("ENABLE_GIN_LOG"))
 	if err != nil {

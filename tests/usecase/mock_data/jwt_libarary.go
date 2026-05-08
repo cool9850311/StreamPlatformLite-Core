@@ -12,8 +12,8 @@ type MockJWTGenerator struct {
 	mock.Mock
 }
 
-func (m *MockJWTGenerator) GenerateDiscordToken(ctx context.Context, discordId string, guildMemberData *dto.DiscordGuildMemberDTO, userRole role.Role, secretKey string) (string, error) {
-	args := m.Called(ctx, discordId, guildMemberData, userRole, secretKey)
+func (m *MockJWTGenerator) GenerateDiscordToken(ctx context.Context, discordId string, guildMemberData *dto.DiscordGuildMemberDTO, userRole role.Role, secretKey string, ytChannelID string) (string, error) {
+	args := m.Called(ctx, discordId, guildMemberData, userRole, secretKey, ytChannelID)
 	return args.String(0), args.Error(1)
 }
 

@@ -51,3 +51,10 @@ type DiscordClan struct {
 	Tag             string `json:"tag"`
 	Badge           string `json:"badge"`
 }
+
+type DiscordConnectionDTO struct {
+	Type    string `json:"type"`
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Revoked bool   `json:"revoked"`
+}

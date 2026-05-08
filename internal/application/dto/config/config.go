@@ -9,8 +9,9 @@ type Config struct {
 		LogLevel     string `mapstructure:"log_level" default:"INFO"`
 	} `mapstructure:"server"`
 	Frontend struct {
-		Domain string `mapstructure:"domain"`
-		Port   int    `mapstructure:"port"`
+		Domain    string `mapstructure:"domain"`
+		Port      int    `mapstructure:"port"`
+		LoginPath string `mapstructure:"login_path"`
 	} `mapstructure:"frontend"`
 	PostgreSQL struct {
 		DSN               string `mapstructure:"dsn"`
