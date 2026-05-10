@@ -16,7 +16,7 @@ func NewJWTLibrary() *JWTLibrary {
 	return &JWTLibrary{}
 }
 
-func (j *JWTLibrary) GenerateDiscordToken(ctx context.Context, discordId string, guildMemberData *dto.DiscordGuildMemberDTO, userRole role.Role, secretKey string, ytChannelID string) (string, error) {
+func (j *JWTLibrary) GenerateDiscordToken(ctx context.Context, discordId string, guildMemberData *dto.DiscordGuildMemberDTO, userRole role.Role, secretKey string, ytChannelID string, ytName string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, coreClaims.Claims{
 		UserID:           discordId,
 		Avatar:           guildMemberData.User.Avatar,
@@ -24,6 +24,7 @@ func (j *JWTLibrary) GenerateDiscordToken(ctx context.Context, discordId string,
 		Role:             userRole,
 		IdentityProvider: "Discord",
 		YtChannelID:      ytChannelID,
+		YtName:           ytName,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)), // Token expires in 1 day
 		},

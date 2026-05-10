@@ -24,7 +24,7 @@ func (m *MockDiscordOAuth) GetGuildMemberData(ctx context.Context, accessToken s
 }
 
 // Mock implementation of GetConnections
-func (m *MockDiscordOAuth) GetConnections(ctx context.Context, accessToken string) (string, error) {
+func (m *MockDiscordOAuth) GetConnections(ctx context.Context, accessToken string) (string, string, error) {
 	args := m.Called(ctx, accessToken)
-	return args.String(0), args.Error(1)
+	return args.String(0), args.String(1), args.Error(2)
 }

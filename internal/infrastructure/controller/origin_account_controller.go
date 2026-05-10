@@ -201,6 +201,8 @@ func (c *OriginAccountController) GetMe(ctx *gin.Context) {
 		"role":              claims.Role,
 		"identity_provider": claims.IdentityProvider,
 		"csrf_token":        csrfToken,
+		"yt_channel_id":     claims.YtChannelID,
+		"yt_name":           claims.YtName,
 	})
 }
 

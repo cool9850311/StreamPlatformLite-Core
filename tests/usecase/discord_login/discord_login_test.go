@@ -79,8 +79,8 @@ func TestDiscordLoginUseCase_AdminUser(t *testing.T) {
 		User:  dto.DiscordUserDTO{ID: "admin123"},
 		Roles: []string{},
 	}, nil)
-	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", nil)
-	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string")).Return("jwtToken", nil)
+	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", "", nil)
+	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return("jwtToken", nil)
 	token, redirectURL, err := useCase.Login(ctx, "adminCode")
 
 	assert.NotEmpty(t, token)
@@ -102,8 +102,8 @@ func TestDiscordLoginUseCase_EditorRole(t *testing.T) {
 		User:  dto.DiscordUserDTO{ID: "fakeEditorID"},
 		Roles: []string{"editor123"},
 	}, nil)
-	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", nil)
-	mockJWTGenerator.On("GenerateDiscordToken", ctx, "fakeEditorID", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Editor, "fakeJWTSecret", mock.AnythingOfType("string")).Return("jwtToken", nil)
+	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", "", nil)
+	mockJWTGenerator.On("GenerateDiscordToken", ctx, "fakeEditorID", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Editor, "fakeJWTSecret", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return("jwtToken", nil)
 	token, redirectURL, err := useCase.Login(ctx, "editorCode")
 
 	assert.NotEmpty(t, token)
@@ -125,8 +125,8 @@ func TestDiscordLoginUseCase_UserRoleWithStreamAccess(t *testing.T) {
 		User:  dto.DiscordUserDTO{ID: "fakeUserID"},
 		Roles: []string{"user123"},
 	}, nil)
-	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", nil)
-	mockJWTGenerator.On("GenerateDiscordToken", ctx, "fakeUserID", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.User, "fakeJWTSecret", mock.AnythingOfType("string")).Return("jwtToken", nil)
+	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", "", nil)
+	mockJWTGenerator.On("GenerateDiscordToken", ctx, "fakeUserID", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.User, "fakeJWTSecret", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return("jwtToken", nil)
 	token, redirectURL, err := useCase.Login(ctx, "userCode")
 
 	assert.NotEmpty(t, token)
@@ -148,8 +148,8 @@ func TestDiscordLoginUseCase_GuestRole(t *testing.T) {
 		User:  dto.DiscordUserDTO{ID: "fakeGuestID"},
 		Roles: []string{},
 	}, nil)
-	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", nil)
-	mockJWTGenerator.On("GenerateDiscordToken", ctx, "fakeGuestID", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Guest, "fakeJWTSecret", mock.AnythingOfType("string")).Return("jwtToken", nil)
+	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", "", nil)
+	mockJWTGenerator.On("GenerateDiscordToken", ctx, "fakeGuestID", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Guest, "fakeJWTSecret", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return("jwtToken", nil)
 	token, redirectURL, err := useCase.Login(ctx, "guestCode")
 
 	assert.NotEmpty(t, token)
@@ -167,7 +167,7 @@ func TestDiscordLoginUseCase_SystemSettingRetrievalError(t *testing.T) {
 		User:  dto.DiscordUserDTO{ID: "user999"},
 		Roles: []string{},
 	}, nil)
-	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", nil)
+	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", "", nil)
 
 	token, redirectURL, err := useCase.Login(ctx, "errorCode")
 
@@ -226,8 +226,8 @@ func TestDiscordLoginUseCase_ValidateStateAndLogin_Success(t *testing.T) {
 		User:  dto.DiscordUserDTO{ID: "admin123"},
 		Roles: []string{},
 	}, nil)
-	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", nil)
-	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string")).Return("jwtToken", nil)
+	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", "", nil)
+	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return("jwtToken", nil)
 
 	token, successURL, errorURL, err := useCase.ValidateStateAndLogin(ctx, "test_code", "valid_state")
 
@@ -274,8 +274,8 @@ func TestDiscordLoginUseCase_ValidateStateAndLogin_ReplayAttack(t *testing.T) {
 		User:  dto.DiscordUserDTO{ID: "admin123"},
 		Roles: []string{},
 	}, nil).Once()
-	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", nil).Once()
-	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string")).Return("jwtToken", nil).Once()
+	mockDiscordOAuth.On("GetConnections", ctx, "accessToken").Return("", "", nil).Once()
+	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return("jwtToken", nil).Once()
 
 	// First attempt: Should succeed
 	token1, _, _, err1 := useCase.ValidateStateAndLogin(ctx, "code1", state)
@@ -317,8 +317,8 @@ func TestDiscordLoginUseCase_CompleteOAuthFlow_NormalCase(t *testing.T) {
 		User:  dto.DiscordUserDTO{ID: "admin123"},
 		Roles: []string{},
 	}, nil).Once()
-	mockDiscordOAuth.On("GetConnections", ctx, "discord_access_token").Return("", nil).Once()
-	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string")).Return("final_jwt_token", nil).Once()
+	mockDiscordOAuth.On("GetConnections", ctx, "discord_access_token").Return("", "", nil).Once()
+	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return("final_jwt_token", nil).Once()
 
 	token, successURL, _, err := useCase.ValidateStateAndLogin(ctx, "auth_code_123", generatedState)
 
@@ -467,8 +467,8 @@ func TestDiscordLoginUseCase_ValidateStateAndLogin_JWTGenerationError(t *testing
 		User:  dto.DiscordUserDTO{ID: "admin123"},
 		Roles: []string{},
 	}, nil).Once()
-	mockDiscordOAuth.On("GetConnections", ctx, "access_token").Return("", nil).Once()
-	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string")).Return("", errors.New("jwt signing failed")).Once()
+	mockDiscordOAuth.On("GetConnections", ctx, "access_token").Return("", "", nil).Once()
+	mockJWTGenerator.On("GenerateDiscordToken", ctx, "admin123", mock.AnythingOfType("*dto.DiscordGuildMemberDTO"), role.Admin, "fakeJWTSecret", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return("", errors.New("jwt signing failed")).Once()
 
 	token, _, errorURL, err := useCase.ValidateStateAndLogin(ctx, "valid_code", "valid_state")
 

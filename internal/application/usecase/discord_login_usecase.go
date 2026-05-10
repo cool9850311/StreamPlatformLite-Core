@@ -144,10 +144,11 @@ func (u *DiscordLoginUseCase) Login(ctx context.Context, code string) (token str
 		return "", clientRedirectURL, errors.ErrInternal
 	}
 
-	ytChannelID, err := u.discordOAuth.GetConnections(ctx, accessToken)
+	ytChannelID, ytName, err := u.discordOAuth.GetConnections(ctx, accessToken)
 	if err != nil {
 		u.Log.Error(ctx, "Error getting Discord connections (YT binding): "+err.Error())
 		ytChannelID = ""
+		ytName = ""
 	}
 
 	discordId := discordGuildMemberData.User.ID
@@ -155,7 +156,7 @@ func (u *DiscordLoginUseCase) Login(ctx context.Context, code string) (token str
 
 	// Check for admin role
 	if discordId == u.config.Discord.AdminID {
-		token, err := u.generateToken(ctx, discordId, discordGuildMemberData, role.Admin, ytChannelID)
+		token, err := u.generateToken(ctx, discordId, discordGuildMemberData, role.Admin, ytChannelID, ytName)
 		if err != nil {
 			return "", clientRedirectURL, err
 		}
@@ -170,7 +171,7 @@ func (u *DiscordLoginUseCase) Login(ctx context.Context, code string) (token str
 
 	// Check for editor role
 	if contains(userDiscordRoles, setting.EditorRoleId) {
-		token, err := u.generateToken(ctx, discordId, discordGuildMemberData, role.Editor, ytChannelID)
+		token, err := u.generateToken(ctx, discordId, discordGuildMemberData, role.Editor, ytChannelID, ytName)
 		if err != nil {
 			return "", clientRedirectURL, err
 		}
@@ -179,13 +180,13 @@ func (u *DiscordLoginUseCase) Login(ctx context.Context, code string) (token str
 
 	// Check for stream access roles
 	if hasIntersection(userDiscordRoles, setting.StreamAccessRoleIds) {
-		token, err := u.generateToken(ctx, discordId, discordGuildMemberData, role.User, ytChannelID)
+		token, err := u.generateToken(ctx, discordId, discordGuildMemberData, role.User, ytChannelID, ytName)
 		if err != nil {
 			return "", clientRedirectURL, err
 		}
 		return token, clientRedirectURL, nil
 	}
-	token, err = u.generateToken(ctx, discordId, discordGuildMemberData, role.Guest, ytChannelID)
+	token, err = u.generateToken(ctx, discordId, discordGuildMemberData, role.Guest, ytChannelID, ytName)
 	if err != nil {
 		return "", clientRedirectURL, err
 	}
@@ -193,8 +194,8 @@ func (u *DiscordLoginUseCase) Login(ctx context.Context, code string) (token str
 
 }
 
-func (u *DiscordLoginUseCase) generateToken(ctx context.Context, discordId string, discordGuildMemberData *dto.DiscordGuildMemberDTO, userRole role.Role, ytChannelID string) (string, error) {
-	jwt, err := u.jwtGenerator.GenerateDiscordToken(ctx, discordId, discordGuildMemberData, userRole, u.config.JWT.SecretKey, ytChannelID)
+func (u *DiscordLoginUseCase) generateToken(ctx context.Context, discordId string, discordGuildMemberData *dto.DiscordGuildMemberDTO, userRole role.Role, ytChannelID string, ytName string) (string, error) {
+	jwt, err := u.jwtGenerator.GenerateDiscordToken(ctx, discordId, discordGuildMemberData, userRole, u.config.JWT.SecretKey, ytChannelID, ytName)
 	if err != nil {
 		u.Log.Error(ctx, "Error generating JWT: "+err.Error())
 		return "", errors.ErrInternal

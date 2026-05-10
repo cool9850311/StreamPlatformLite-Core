@@ -12,5 +12,6 @@ type Claims struct {
 	Role             role.Role `json:"role"`
 	IdentityProvider string    `json:"identity_provider"`
 	YtChannelID      string    `json:"yt_channel_id"`
+	YtName           string    `json:"yt_name"`
 	jwt.RegisteredClaims
 }

@@ -141,41 +141,41 @@ func (d *DiscordOAuthImpl) GetGuildMemberData(ctx context.Context, accessToken s
 	return &guildMemberData, nil
 }
 
-func (d *DiscordOAuthImpl) GetConnections(ctx context.Context, accessToken string) (string, error) {
+func (d *DiscordOAuthImpl) GetConnections(ctx context.Context, accessToken string) (string, string, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", "https://discord.com/api/v10/users/@me/connections", nil)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if resp.StatusCode != http.StatusOK {
 		d.logger.Debug(ctx, fmt.Sprintf("Discord connections API failed. Status: %d, Body: %s", resp.StatusCode, string(body)))
-		return "", errors.New("failed to get connections from Discord")
+		return "", "", errors.New("failed to get connections from Discord")
 	}
 
 	var connections []dto.DiscordConnectionDTO
 	if err := json.Unmarshal(body, &connections); err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	for _, c := range connections {
 		if c.Type == "youtube" && !c.Revoked {
-			return c.ID, nil
+			return c.ID, c.Name, nil
 		}
 	}
-	return "", nil
+	return "", "", nil
 }
 
 // Helper functions for safe type conversion
