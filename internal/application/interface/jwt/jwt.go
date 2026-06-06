@@ -8,6 +8,6 @@ import (
 )
 
 type JWTGenerator interface {
-	GenerateDiscordToken(ctx context.Context, discordId string, guildMemberData *dto.DiscordGuildMemberDTO, userRole role.Role, secretKey string, ytChannelID string, ytName string) (string, error)
+	GenerateDiscordToken(ctx context.Context, discordId string, guildMemberData *dto.DiscordGuildMemberDTO, userRole role.Role, secretKey string, ytChannelID string, ytName string, roleIDs []string) (string, error)
 	GenerateOriginToken(ctx context.Context, userID string, username string, userRole role.Role, secretKey string) (string, error)
 }
