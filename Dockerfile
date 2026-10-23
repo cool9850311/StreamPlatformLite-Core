@@ -1,4 +1,4 @@
-FROM golang:1.26-alpine
+FROM golang:1.26.10-alpine
 
 RUN adduser -D -u 1001 appuser
 
